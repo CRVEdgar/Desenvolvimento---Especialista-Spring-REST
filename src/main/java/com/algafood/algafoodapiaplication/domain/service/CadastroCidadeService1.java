@@ -4,7 +4,7 @@ import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoExceptio
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.model.Cidade;
 import com.algafood.algafoodapiaplication.domain.model.Estado;
-import com.algafood.algafoodapiaplication.domain.repository.CidadeRepository1;
+import com.algafood.algafoodapiaplication.domain.repository.CidadeRepository;
 import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CadastroCidadeService1 {
 
     @Autowired
-    private CidadeRepository1 cidadeRepository1;
+    private CidadeRepository cidadeRepository;
 
     @Autowired
     private EstadoRepository1 estadoRepository1;
@@ -30,14 +30,15 @@ public class CadastroCidadeService1 {
 
         cidade.setEstado(estado);
         //cidade.setCozinha(estado);
-        return cidadeRepository1.adicionarOuAtualizar(cidade);
+        return cidadeRepository.save(cidade);
+       // return cidadeRepository.adicionarOuAtualizar(cidade);
 
     }
 
     public void excluir(Long cidadeId){
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
-            cidadeRepository1.remover(cidadeId);
+            cidadeRepository.deleteById(cidadeId);
 
         } catch(EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException( String.format("O id [ %d ] da cozinha informado não existe", cidadeId));
