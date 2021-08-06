@@ -4,13 +4,14 @@ import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Component
+@Repository
 public class CozinhaRepositorylmpl implements CozinhaRepository {
 
     @PersistenceContext
@@ -20,6 +21,11 @@ public class CozinhaRepositorylmpl implements CozinhaRepository {
     public List<Cozinha> listar(){
         return manager.createQuery("from Cozinha", Cozinha.class).getResultList(); //linguahuem JPQL faz consulta em OBJETOS e nao em tabelas
 //        return manager.createQuery("from tab_cozinhas", Cozinha.class).getResultList(); //aqui está errado porque retorna uma tabela
+    }
+
+    @Override
+    public List<Cozinha> consultarPorNome(String nomeCozinha) {
+        return manager.createQuery("from Cozinha where nome like :nome", Cozinha.class).setParameter("nome", "%" + nomeCozinha +"%").getResultList();
     }
 
     @Transactional
