@@ -28,14 +28,14 @@ public class CadastroRestauranteService {
 
         restaurante.setCozinha(cozinha);
 
-        return restauranteRepository.adicionarOuAtualizar(restaurante);
+        return restauranteRepository.save(restaurante);
 
     }
 
     public void excluir(Long restauranteId){
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
-            restauranteRepository.remover(restauranteId);
+            restauranteRepository.deleteById(restauranteId);
 
         } catch(EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException( String.format("O id [ %d ] da cozinha informado não existe", restauranteId));

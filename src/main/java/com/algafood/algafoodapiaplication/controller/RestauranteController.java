@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -33,16 +33,16 @@ public class RestauranteController {
     @GetMapping
     public List<Restaurante> listar(){
 
-        return restauranteRepository.listar();
+        return restauranteRepository.findAll();
     }
 
 
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
-        Restaurante restaurante = restauranteRepository.buscar(restauranteId);
+       Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
 
-        if(restaurante != null ){
-            return ResponseEntity.ok(restaurante);
+        if(restaurante.isPresent() ){
+            return ResponseEntity.ok(restaurante.get());
         }else{
             System.out.println("ID INVALIDO - ID DO RESTAURANTE INDICADO NÃO ENCONTRADO");
            // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -68,13 +68,13 @@ public class RestauranteController {
     public ResponseEntity<?> atualizar( @PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 
         try{
-            Restaurante restauranteAtual =  restauranteRepository.buscar(restauranteId);
+            Optional<Restaurante> restauranteAtual =  restauranteRepository.findById(restauranteId);
 
-            if(restauranteAtual != null){
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
+            if(restauranteAtual.isPresent()){
+                BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
 
-                cadastroRestaurante.salvar(restauranteAtual);
-                return ResponseEntity.ok(restauranteAtual);
+               Restaurante restauranteSalvo = cadastroRestaurante.salvar(restauranteAtual.get());
+                return ResponseEntity.ok(restauranteSalvo);
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -103,15 +103,15 @@ public class RestauranteController {
 
     @PatchMapping("/{restauranteId}")
     public ResponseEntity<?> atualizaParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
-        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
 
-        if(restauranteAtual == null){
+        if(restauranteAtual.isPresent()){
             return ResponseEntity.notFound().build();
         }
 
-        merge(campos, restauranteAtual);
+        merge(campos, restauranteAtual.get());
 
-        return atualizar(restauranteId, restauranteAtual);
+        return atualizar(restauranteId, restauranteAtual.get());
     }
 
     //explicação VD 4.34

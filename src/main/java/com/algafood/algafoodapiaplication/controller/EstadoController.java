@@ -2,10 +2,9 @@ package com.algafood.algafoodapiaplication.controller;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
-import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Estado;
-import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository1;
-import com.algafood.algafoodapiaplication.domain.service.CadastroEstadoService1;
+import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository;
+import com.algafood.algafoodapiaplication.domain.service.CadastroEstadoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController // inclui @componente e @responseBody
@@ -20,23 +20,23 @@ import java.util.List;
 public class EstadoController {
 
     @Autowired
-    private EstadoRepository1 estadoRepository;
+    private EstadoRepository estadoRepository;
 
     @Autowired
-    private CadastroEstadoService1 cadastroEstado;
+    private CadastroEstadoService cadastroEstado;
 
     @GetMapping
     public List<Estado> listar(){
-        return estadoRepository.listar();
+        return estadoRepository.findAll();
     }
 
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<Estado> buscar(@PathVariable Long estadoId){
-        Estado estado = estadoRepository.buscar(estadoId);
+        Optional<Estado> estado = estadoRepository.findById(estadoId);
 
-        if(estado != null ){
-            return ResponseEntity.ok(estado);
+        if(estado.isPresent() ){
+            return ResponseEntity.ok(estado.get());
         }else{
             System.out.println("ID INVALIDO - ID DO ESTADO INDICADO NÃO ENCONTRADO");
             // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -53,14 +53,14 @@ public class EstadoController {
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<Estado> atualizar( @PathVariable Long estadoId, @RequestBody Estado estado){
-        Estado estadoAtual = estadoRepository.buscar(estadoId);
+        Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
 
-        if(estadoAtual != null){
+        if(estadoAtual.isPresent()){
             //cozinhaAtual.setNome(cozinha.getNome());
-            BeanUtils.copyProperties(estado, estadoAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
+            BeanUtils.copyProperties(estado, estadoAtual.get(), "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
 
-            cadastroEstado.salvar(estadoAtual);
-            return ResponseEntity.ok(estadoAtual);
+            Estado estadoSalvo = cadastroEstado.salvar(estadoAtual.get());
+            return ResponseEntity.ok(estadoSalvo);
         }
         return ResponseEntity.notFound().build();
     }

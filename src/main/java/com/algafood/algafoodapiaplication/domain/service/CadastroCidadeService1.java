@@ -5,11 +5,13 @@ import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontrada
 import com.algafood.algafoodapiaplication.domain.model.Cidade;
 import com.algafood.algafoodapiaplication.domain.model.Estado;
 import com.algafood.algafoodapiaplication.domain.repository.CidadeRepository;
-import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository1;
+import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CadastroCidadeService1 {
@@ -18,17 +20,17 @@ public class CadastroCidadeService1 {
     private CidadeRepository cidadeRepository;
 
     @Autowired
-    private EstadoRepository1 estadoRepository1;
+    private EstadoRepository estadoRepository;
 
     public Cidade salvar(Cidade cidade){
         Long estadoId = cidade.getEstado().getId();
-        Estado estado = estadoRepository1.buscar(estadoId);
+        Optional<Estado> estado = estadoRepository.findById(estadoId);
 
-        if(estado == null){
+        if(estado.isEmpty()){
             throw new EntidadeNaoEncontradaException(String.format("Não existe cozinha com o código [ %d ] informado", estadoId));
         }
 
-        cidade.setEstado(estado);
+        cidade.setEstado(estado.get());
         //cidade.setCozinha(estado);
         return cidadeRepository.save(cidade);
        // return cidadeRepository.adicionarOuAtualizar(cidade);
