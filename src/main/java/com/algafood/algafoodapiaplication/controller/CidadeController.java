@@ -4,7 +4,7 @@ import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoExceptio
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.model.Cidade;
 import com.algafood.algafoodapiaplication.domain.repository.CidadeRepository;
-import com.algafood.algafoodapiaplication.domain.service.CadastroCidadeService1;
+import com.algafood.algafoodapiaplication.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class CidadeController {
     private CidadeRepository cidadeRepository;
 
     @Autowired
-    private CadastroCidadeService1 cadastroCidade;
+    private CadastroCidadeService cadastroCidade;
 
 
     @GetMapping
@@ -41,7 +41,7 @@ public class CidadeController {
             return ResponseEntity.ok(cidade.get());
         }else{
             System.out.println("ID INVALIDO - ID DA CIDADE INDICADA NÃO ENCONTRADA");
-           // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
             return ResponseEntity.notFound().build();
         }
     }
@@ -55,7 +55,7 @@ public class CidadeController {
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-//        return cadastroRestaurante.salvar(cidade);
+
     }
 
 

@@ -1,4 +1,4 @@
-package com.algafood.algafoodapiaplication.controller;
+package com.algafood.algafoodapiaplication.controller.comEntityManager;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
