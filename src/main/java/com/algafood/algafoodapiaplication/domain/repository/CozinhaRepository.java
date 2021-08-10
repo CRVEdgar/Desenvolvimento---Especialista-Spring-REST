@@ -16,6 +16,8 @@ public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
     Optional<Cozinha> findByNome(String nome);
 
+    boolean existsByNome(String nome); //vrf se existe dados com o barametro informado
+
 //    List<Cozinha> listar();
 
 //    Cozinha buscar (Long id);
