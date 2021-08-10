@@ -28,7 +28,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
      * CONSULTAS COM JPQL
      * */
 
-     @Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
+     //@Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
      List<Restaurante> consultarPorNomeId(String nome, @Param("id") Long cozinha); //rlz a consulta pr nome e id da cozinha
 
      /*

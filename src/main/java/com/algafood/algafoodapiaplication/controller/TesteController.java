@@ -64,8 +64,9 @@ public class TesteController {
         return restauranteRepository.countByCozinhaId(cozinhaId);
     }
 
+
     /*
-    * CONTAS COM JPQL
+    * CONSULTAS COM JPQL
     * */
 
     @GetMapping("/restaurantes/jpql/unica-por-nome")
