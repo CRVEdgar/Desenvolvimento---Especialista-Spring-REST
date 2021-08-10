@@ -63,4 +63,13 @@ public class TesteController {
     public int contagemRestaurantesPorCozinha(Long cozinhaId){
         return restauranteRepository.countByCozinhaId(cozinhaId);
     }
+
+    /*
+    * CONTAS COM JPQL
+    * */
+
+    @GetMapping("/restaurantes/jpql/unica-por-nome")
+    public List<Restaurante> consultarPorNome(String nome, Long cozinhaId){
+        return restauranteRepository.consultarPorNomeId(nome, cozinhaId);
+    }
 }

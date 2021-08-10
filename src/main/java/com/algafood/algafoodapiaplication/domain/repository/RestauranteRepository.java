@@ -3,6 +3,8 @@ package com.algafood.algafoodapiaplication.domain.repository;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -22,6 +24,16 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
      int countByCozinhaId (Long cozinhaId); //conta a quantidade de restaurantes cadastrados na cozinha informada
 
+     /*
+     * CONSULTAS COM JPQL
+     * */
+
+     @Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
+     List<Restaurante> consultarPorNomeId(String nome, @Param("id") Long cozinha); //rlz a consulta pr nome e id da cozinha
+
+     /*
+     * CONSULTAS COM ENTITY MANAGER
+     * */
 //    List<Restaurante> listar();
 //    Restaurante buscar (Long id);
 //    Restaurante adicionarOuAtualizar(Restaurante restaurante);
