@@ -1,4 +1,4 @@
-package com.algafood.algafoodapiaplication.infrastructure.repository;
+package com.algafood.algafoodapiaplication.infrastructure.repository.EM;
 
 import com.algafood.algafoodapiaplication.domain.model.Estado;
 import com.algafood.algafoodapiaplication.domain.repository.EstadoRepository;

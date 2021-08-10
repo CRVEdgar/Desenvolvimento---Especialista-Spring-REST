@@ -4,10 +4,10 @@ import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
 import com.algafood.algafoodapiaplication.domain.repository.RestauranteRepository;
+import com.algafood.algafoodapiaplication.infrastructure.repository.RestauranteRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -23,6 +23,9 @@ public class TesteController {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private RestauranteRepositoryImpl restauranteRepositoryImpl;
 
     @GetMapping("/cozinhas/por-nome")
     public List<Cozinha> cozinhasPorNome(String nome){
@@ -72,5 +75,10 @@ public class TesteController {
     @GetMapping("/restaurantes/jpql/unica-por-nome")
     public List<Restaurante> consultarPorNome(String nome, Long cozinhaId){
         return restauranteRepository.consultarPorNomeId(nome, cozinhaId);
+    }
+
+    @GetMapping("/restaurantes/jpql/por-nome-e-frete")
+    public List<Restaurante> restaurantesPorNomeFrete(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
+        return restauranteRepository.consulta(nome, taxaFreteInicial, taxaFreteFinal);
     }
 }
