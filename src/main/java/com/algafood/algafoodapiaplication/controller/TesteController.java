@@ -5,8 +5,6 @@ import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
 import com.algafood.algafoodapiaplication.domain.repository.RestauranteRepository;
 import com.algafood.algafoodapiaplication.infrastructure.repository.RestauranteRepositoryImpl;
-import com.algafood.algafoodapiaplication.infrastructure.repository.spec.restauranteComFreteGratisSpec;
-import com.algafood.algafoodapiaplication.infrastructure.repository.spec.restauranteComNomeSemelhanteSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import static com.algafood.algafoodapiaplication.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static com.algafood.algafoodapiaplication.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
 
 @RestController
 @RequestMapping("/teste")
@@ -90,9 +91,11 @@ public class TesteController {
 
     @GetMapping("/restaurantes/com-frete-gratis")
     public List<Restaurante> restaurantesComFreteGratis(String nome){
-        var comFreteGratis = new restauranteComFreteGratisSpec();
-        var comNomeSememlhante = new restauranteComNomeSemelhanteSpec(nome);
+//        var comFreteGratis = new restauranteComFreteGratisSpec();
+//        var comNomeSememlhante = new restauranteComNomeSemelhanteSpec(nome);
 
-        return restauranteRepository.findAll(comNomeSememlhante.and(comFreteGratis)); // ou findAll(comNomeSememlhante) | ou findAll(comFreteGratis)
+
+        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome))); // ou findAll(comNomeSememlhante) | ou findAll(comFreteGratis)
+                                        // c/c import static da classe/metodo [linha 20 e 21 do codigo*]
     }
 }
