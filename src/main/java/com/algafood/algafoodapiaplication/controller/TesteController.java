@@ -5,6 +5,8 @@ import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
 import com.algafood.algafoodapiaplication.domain.repository.RestauranteRepository;
 import com.algafood.algafoodapiaplication.infrastructure.repository.RestauranteRepositoryImpl;
+import com.algafood.algafoodapiaplication.infrastructure.repository.spec.restauranteComFreteGratisSpec;
+import com.algafood.algafoodapiaplication.infrastructure.repository.spec.restauranteComNomeSemelhanteSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,5 +82,17 @@ public class TesteController {
     @GetMapping("/restaurantes/jpql/por-nome-e-frete")
     public List<Restaurante> restaurantesPorNomeFrete(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
         return restauranteRepository.consulta(nome, taxaFreteInicial, taxaFreteFinal);
+    }
+
+    /*
+    * CONSULTAS com Specification
+    * */
+
+    @GetMapping("/restaurantes/com-frete-gratis")
+    public List<Restaurante> restaurantesComFreteGratis(String nome){
+        var comFreteGratis = new restauranteComFreteGratisSpec();
+        var comNomeSememlhante = new restauranteComNomeSemelhanteSpec(nome);
+
+        return restauranteRepository.findAll(comNomeSememlhante.and(comFreteGratis)); // ou findAll(comNomeSememlhante) | ou findAll(comFreteGratis)
     }
 }
