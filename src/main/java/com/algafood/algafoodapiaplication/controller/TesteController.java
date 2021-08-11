@@ -93,9 +93,8 @@ public class TesteController {
     public List<Restaurante> restaurantesComFreteGratis(String nome){
 //        var comFreteGratis = new restauranteComFreteGratisSpec();
 //        var comNomeSememlhante = new restauranteComNomeSemelhanteSpec(nome);
+         
+        return restauranteRepository.findComFreteGratis(nome);
 
-
-        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome))); // ou findAll(comNomeSememlhante) | ou findAll(comFreteGratis)
-                                        // c/c import static da classe/metodo [linha 20 e 21 do codigo*]
     }
 }
