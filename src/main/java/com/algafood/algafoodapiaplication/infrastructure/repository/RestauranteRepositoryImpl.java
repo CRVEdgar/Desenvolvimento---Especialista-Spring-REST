@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,11 +69,20 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
         Root<Restaurante> root = criteria.from(Restaurante.class); //from Restaurante
 
-        Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%"); //cria o critério
-        Predicate taxaIncialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
-        Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+        var predicates = new ArrayList<>(); //cria a lista de Predicates
 
-        criteria.where(nomePredicate, taxaIncialPredicate, taxaFinalPredicate); //especifica a condição
+        //verifica se foi passado alfo na referencia
+        if(StringUtils.hasText(nome)) {
+            predicates.add(builder.like(root.get("nome"), "%" + nome + "%")); //cria o critério
+        }
+        if(taxaFreteInicial != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+        }
+        if(taxaFreteFinal != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+        }
+
+        criteria.where(predicates.toArray(new Predicate[0])); //especifica a condição // o toArray serve para converter a lista em array
 
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
         return query.getResultList();
