@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -34,6 +36,11 @@ public class Restaurante {
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable=false)
     private Cozinha cozinha;
+
+    @ManyToMany
+    @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
+        inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    private List<FormaPagamento> formaPagamento = new ArrayList<>();
 
 //    public Long getId() {
 //        return id;
