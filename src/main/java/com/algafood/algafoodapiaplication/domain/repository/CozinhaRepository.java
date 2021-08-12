@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
+public interface CozinhaRepository extends CustomJpaRepository<Cozinha, Long> {
 
     //o nome do metodo tem que ser igual a um nome de variavel da classe | ou usar o findBy como prefixo
     //keywords [containing = like % ]
