@@ -41,8 +41,11 @@ public class Restaurante {
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
-        inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+                inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormaPagamento> formaPagamento = new ArrayList<>();
+
+    @Embedded //incorporação da classe Endereco
+    private Endereco endereco;
 
 //    public Long getId() {
 //        return id;
