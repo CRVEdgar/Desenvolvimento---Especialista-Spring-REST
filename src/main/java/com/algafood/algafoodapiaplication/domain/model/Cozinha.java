@@ -10,6 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //@Getter
 //@Setter
 @JsonRootName("gastronomia") //renomea a representação do elemento sem alterar o nome / alt só a representacao
@@ -29,13 +32,17 @@ public class Cozinha {
     @Column//(name="nome_cozinha", length=30)
     private String nome;
 
-    public Cozinha() {
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "cozinha")
+    private List<Restaurante> restaurantes = new ArrayList<>();
 
-    public Cozinha(Long id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
+//    public Cozinha() {
+//    }
+//
+//    public Cozinha(Long id, String nome) {
+//        this.id = id;
+//        this.nome = nome;
+//    }
 
 //    public Long getId() {
 //        return id;
