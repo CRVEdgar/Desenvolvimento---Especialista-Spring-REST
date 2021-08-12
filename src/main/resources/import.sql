@@ -13,9 +13,13 @@ insert into tab_cidade(nome, estado_id) values ('Fortaleza', 3);
 insert into tab_cozinhas (nome) values ('Brasileira');
 insert into tab_cozinhas (nome) values ('Australiana');
 
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values ('Cabana do Sol', 10, 1, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
-insert into tab_restaurante (nome, taxa_frete, cozinha_id) values ('Chilli', 9.5, 1);
-insert into tab_restaurante (nome, taxa_frete, cozinha_id) values ('Querencia dos Pampas', 15.7, 2);
+insert into tab_restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into tab_restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (2, 'Thai Delivery', 9.50, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into tab_restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (3, 'Tuk Tuk Comida Indiana', 15, 2, CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0));
+
+-- insert into tab_restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values ('Cabana do Sol', 10, 1, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+-- insert into tab_restaurante (nome, taxa_frete, cozinha_id) values ('Chilli', 9.5, 1);
+-- insert into tab_restaurante (nome, taxa_frete, cozinha_id) values ('Querencia dos Pampas', 15.7, 2);
 
 
 

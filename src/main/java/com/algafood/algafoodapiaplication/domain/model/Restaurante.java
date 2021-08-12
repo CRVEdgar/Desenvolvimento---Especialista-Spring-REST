@@ -4,10 +4,13 @@ package com.algafood.algafoodapiaplication.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +32,6 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable=false)
     private BigDecimal taxaFrete;
 
-    private Boolean ativo;
-    private Boolean aberto;
-    private Instant dataCadastro;
-    private Instant dataAtualizacao;
 
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable=false)
@@ -47,6 +46,14 @@ public class Restaurante {
     @JsonIgnore
     @Embedded //incorporação da classe Endereco
     private Endereco endereco;
+
+    @CreationTimestamp //deve ser atribuida com uma data/hora atual no momento que o objeto foi criado
+    @Column(nullable = false)
+    private LocalDateTime dataCadastro;
+
+    @UpdateTimestamp // atribui uma data/hora atual no momento que o objeto é atualizado
+    @Column(nullable = false)
+    private LocalDateTime dataAtualizacao;
 
 //    public Long getId() {
 //        return id;
