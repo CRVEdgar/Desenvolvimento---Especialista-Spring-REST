@@ -71,7 +71,7 @@ public class RestauranteController {
             Optional<Restaurante> restauranteAtual =  restauranteRepository.findById(restauranteId);
 
             if(restauranteAtual.isPresent()){
-                BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formaPagamento"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
+                BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formaPagamento", "endereco"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
 
                Restaurante restauranteSalvo = cadastroRestaurante.salvar(restauranteAtual.get());
                 return ResponseEntity.ok(restauranteSalvo);
