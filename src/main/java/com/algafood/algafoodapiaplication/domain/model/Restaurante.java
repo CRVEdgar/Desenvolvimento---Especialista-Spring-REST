@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +46,12 @@ public class Restaurante {
     @Embedded //incorporação da classe Endereco
     private Endereco endereco;
 
+    @JsonIgnore
     @CreationTimestamp //deve ser atribuida com uma data/hora atual no momento que o objeto foi criado
     @Column(nullable = false)
     private LocalDateTime dataCadastro;
 
+    @JsonIgnore
     @UpdateTimestamp // atribui uma data/hora atual no momento que o objeto é atualizado
     @Column(nullable = false)
     private LocalDateTime dataAtualizacao;
