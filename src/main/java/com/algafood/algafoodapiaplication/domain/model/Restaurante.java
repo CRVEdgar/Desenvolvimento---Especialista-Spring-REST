@@ -38,8 +38,8 @@ public class Restaurante {
     @JoinColumn(name = "cozinha_id", nullable=false)
     private Cozinha cozinha;
 
-    @JsonIgnore
-    @ManyToMany
+//    @JsonIgnore
+    @ManyToMany//(fetch = FetchType.EAGER) //quando o padrao já é buscar, não é necessário ultz o EAGER, aqui é só pra demonstrar
     @JoinTable(name = "tbl_restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
                 inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormaPagamento> formaPagamento = new ArrayList<>();
