@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "tab_formaPagamento")
 public class FormaPagamento {
 
     @EqualsAndHashCode.Include
