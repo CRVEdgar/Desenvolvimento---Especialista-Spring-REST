@@ -2,6 +2,7 @@ package com.algafood.algafoodapiaplication.domain.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,8 +32,9 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable=false)
     private BigDecimal taxaFrete;
 
-
-    @ManyToOne
+//    @JsonIgnore
+    @JsonIgnoreProperties("hibernateLazyInitializer") //ignora a visualização mas realiza a busca quando necessário,
+    @ManyToOne(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)
     private Cozinha cozinha;
 
