@@ -73,22 +73,26 @@ public class CozinhaController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
+//    @DeleteMapping("/{cozinhaId}")
+//    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
+//
+//        // obs: no controlador deve-se retornar o status do erro,e no serviço deve-se retornar as exceções capturadas
+//        try{
+//            cadastroCozinha.excluir(cozinhaId);
+//            return ResponseEntity.noContent().build();
+//
+//        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
+//            return ResponseEntity.notFound().build();
+//
+//        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (forem key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+//        }
 
-        // obs: no controlador deve-se retornar o status do erro,e no serviço deve-se retornar as exceções capturadas
-        try{
+        @DeleteMapping("/{cozinhaId}")
+        @ResponseStatus(HttpStatus.NO_CONTENT) //em caso de sucesso retorna o status
+        public void remover(@PathVariable Long cozinhaId) {
             cadastroCozinha.excluir(cozinhaId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
-            return ResponseEntity.notFound().build();
-
-        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (forem key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-
-    }
 
 
 }
