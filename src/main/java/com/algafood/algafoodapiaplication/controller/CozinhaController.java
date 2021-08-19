@@ -41,16 +41,17 @@ public class CozinhaController {
 
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId){
-        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
-
-        if(cozinha.isPresent() ){
-            return ResponseEntity.ok(cozinha.get());
-        }else{
-            System.out.println("ID INVALIDO - ID DA COZINHA INDICADA NÃO ENCONTRADA");
-
-            return ResponseEntity.notFound().build();
-        }
+    public Cozinha buscar(@PathVariable Long cozinhaId){
+        return cadastroCozinha.buscarOuFalhar(cozinhaId);
+//        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
+//
+//        if(cozinha.isPresent() ){
+//            return ResponseEntity.ok(cozinha.get());
+//        }else{
+//            System.out.println("ID INVALIDO - ID DA COZINHA INDICADA NÃO ENCONTRADA");
+//
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
     @PostMapping
@@ -61,17 +62,14 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar( @PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
-        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
+    public Cozinha atualizar( @PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
 
-        if(cozinhaAtual.isPresent()){
+        Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
-            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
+        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
 
-            Cozinha cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
-            return ResponseEntity.ok(cozinhaSalva);
-        }
-        return ResponseEntity.notFound().build();
+        return cadastroCozinha.salvar(cozinhaAtual);
+
     }
 
 //    @DeleteMapping("/{cozinhaId}")
@@ -92,12 +90,7 @@ public class CozinhaController {
         @DeleteMapping("/{cozinhaId}")
         @ResponseStatus(HttpStatus.NO_CONTENT) //em caso de sucesso retorna o status
         public void remover(@PathVariable Long cozinhaId) {
-//            try{
-                cadastroCozinha.excluir(cozinhaId);
-//            }catch (EntidadeNaoEncontradaException e){
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//
-//            }
+            cadastroCozinha.excluir(cozinhaId);
 
         }
 
