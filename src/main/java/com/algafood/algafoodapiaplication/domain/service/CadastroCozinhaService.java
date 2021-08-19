@@ -7,7 +7,9 @@ import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CadastroCozinhaService {
@@ -26,7 +28,7 @@ public class CadastroCozinhaService {
             cozinhaRepository.deleteById(cozinhaId);
 
         } catch(EmptyResultDataAccessException e){
-            throw new EntidadeNaoEncontradaException( String.format("O id [ %d ] da cozinha informado não existe", cozinhaId));
+            throw new EntidadeNaoEncontradaException( String.format("METODO 1 DE BUSCA - O id [ %d ] da cozinha informado não existe", cozinhaId));
 
         } catch(DataIntegrityViolationException e){
             throw new EntidadeEmUsoException( String.format("Cozinha de código %d não pode ser removida, pois está associado a outro item do banco", cozinhaId));
