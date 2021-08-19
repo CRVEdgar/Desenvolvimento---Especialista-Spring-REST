@@ -2,6 +2,7 @@ package com.algafood.algafoodapiaplication.controller;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
+import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.RestauranteRepository;
 import com.algafood.algafoodapiaplication.domain.service.CadastroRestauranteService;
@@ -42,16 +43,9 @@ public class RestauranteController {
 
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
-       Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
+    public Restaurante buscar(@PathVariable Long restauranteId){
+        return cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        if(restaurante.isPresent() ){
-            return ResponseEntity.ok(restaurante.get());
-        }else{
-            System.out.println("ID INVALIDO - ID DO RESTAURANTE INDICADO NÃO ENCONTRADO");
-           // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PostMapping
@@ -69,53 +63,42 @@ public class RestauranteController {
 
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar( @PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
+    public Restaurante atualizar( @PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 
-        try{
-            Optional<Restaurante> restauranteAtual =  restauranteRepository.findById(restauranteId);
+            Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-            if(restauranteAtual.isPresent()){
-                BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formaPagamento", "endereco", "dataCadastro"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
+            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
 
-               Restaurante restauranteSalvo = cadastroRestaurante.salvar(restauranteAtual.get());
-                return ResponseEntity.ok(restauranteSalvo);
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        }catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            return cadastroRestaurante.salvar(restauranteAtual);
 
     }
 
     @DeleteMapping("/{restauranteId}")
-    public ResponseEntity<?> remover(@PathVariable Long restauranteId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long restauranteId) {
 
+        cadastroRestaurante.excluir(restauranteId);
         // obs: no controlador deve-se retornar o status do erro,e no serviço deve-se retornar as exceções capturadas
-        try{
-            cadastroRestaurante.excluir(restauranteId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
-            return ResponseEntity.notFound().build();
-
-        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (forem key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+//        try{
+//            cadastroRestaurante.excluir(restauranteId);
+//            return ResponseEntity.noContent().build();
+//
+//        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
+//            return ResponseEntity.notFound().build();
+//
+//        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (forem key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+//        }
 
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizaParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
-        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+    public Restaurante atualizaParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
+        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        if(restauranteAtual.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
+        merge(campos, restauranteAtual);
 
-        merge(campos, restauranteAtual.get());
-
-        return atualizar(restauranteId, restauranteAtual.get());
+        return atualizar(restauranteId, restauranteAtual);
     }
 
     //explicação VD 4.34
@@ -124,8 +107,6 @@ public class RestauranteController {
         Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
 
         System.out.println(restauranteOrigem);
-
-
 
         dadosOrigem.forEach((nomePropriedade, valorPropriedade) ->{
             Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
