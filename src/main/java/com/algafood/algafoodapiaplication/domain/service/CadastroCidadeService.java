@@ -16,16 +16,29 @@ import java.util.Optional;
 @Service
 public class CadastroCidadeService {
 
+    private static final String MSG_CIDADE_EM_USO
+            = "Cidade de código %d não pode ser removida, pois está associada a outro item do banco";
+
+    private static final String MSG_CIDADE_NAO_ENCONTRADA
+            = "ID INVALIDO - ID [ %d ] DA CIDADE INDICADA NÃO ENCONTRADA";
+
+    private static final String MSG_ESTADO_NAO_ENCONTRADO
+            = "ID INVALIDO - ID [ %d ] DO ESTADO INDICADO NÃO ENCONTRADO";
+
     @Autowired
     private CidadeRepository cidadeRepository;
 
     @Autowired
-    private EstadoRepository estadoRepository;
+    private CadastroEstadoService cadastroEstado;
+
+//    @Autowired
+//    private EstadoRepository estadoRepository;
 
     public Cidade salvar(Cidade cidade){
         Long estadoId = cidade.getEstado().getId();
 
-        Estado estado = estadoRepository.findById(estadoId).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe estado com o código [ %d ] informado", estadoId)));
+        Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
+//        Estado estado = estadoRepository.findById(estadoId).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 
         cidade.setEstado(estado);
 
@@ -39,10 +52,15 @@ public class CadastroCidadeService {
             cidadeRepository.deleteById(cidadeId);
 
         } catch(EmptyResultDataAccessException e){
-            throw new EntidadeNaoEncontradaException( String.format("O id [ %d ] da cidade informada não existe", cidadeId));
+            throw new EntidadeNaoEncontradaException( String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
 
         } catch(DataIntegrityViolationException e){
-            throw new EntidadeEmUsoException( String.format("Cidade de código %d não pode ser removida, pois está associado a outro item do banco", cidadeId));
+            throw new EntidadeEmUsoException( String.format(MSG_CIDADE_EM_USO, cidadeId));
         }
+    }
+
+    public Cidade buscarOuFalhar(Long cidadeId){
+        return cidadeRepository.findById(cidadeId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
     }
 }

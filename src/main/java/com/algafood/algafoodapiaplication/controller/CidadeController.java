@@ -34,74 +34,37 @@ public class CidadeController {
 
 
     @GetMapping("/{cidadeId}")
-    public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId){
-       Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+    public Cidade buscar(@PathVariable Long cidadeId){
 
-        if(cidade.isPresent() ){
-            return ResponseEntity.ok(cidade.get());
-        }else{
-            System.out.println("ID INVALIDO - ID DA CIDADE INDICADA NÃO ENCONTRADA");
+        return cadastroCidade.buscarOuFalhar(cidadeId);
 
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar (@RequestBody Cidade cidade){
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cidade adicionar (@RequestBody Cidade cidade){
 
-        try{
-            cidade = cadastroCidade.salvar(cidade);
-            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return cadastroCidade.salvar(cidade);
 
     }
 
 
 
     @PutMapping("/{cidadeId}")
-    public ResponseEntity<?> atualizar( @PathVariable Long cidadeId, @RequestBody Cidade cidade){
-        Optional<Cidade> cidadeAtual = cidadeRepository.findById(cidadeId);
+    public Cidade atualizar( @PathVariable Long cidadeId, @RequestBody Cidade cidade){
+        Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 
-        if(cidadeAtual.isPresent()){
-            BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
+        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
-            Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
-            return ResponseEntity.ok(cidadeSalva);
-        }
-        return ResponseEntity.notFound().build();
-//        try{
-//            Cidade cidadeAtual =  cidadeRepository.buscar(cidadeId);
-//
-//            if(cidadeAtual != null){
-//                BeanUtils.copyProperties(cidade, cidadeAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
-//
-//                cadastroCidade.salvar(cidadeAtual);
-//                return ResponseEntity.ok(cidadeAtual);
-//            }
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//
-//        }catch (EntidadeNaoEncontradaException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
+        return cadastroCidade.salvar(cidadeAtual);
+
 
     }
 
     @DeleteMapping("/{cidadeId}")
-    public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId) {
-
-        // obs: no controlador deve-se retornar o status do erro,e no serviço deve-se retornar as exceções capturadas
-        try{
-            cadastroCidade.excluir(cidadeId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
-            return ResponseEntity.notFound().build();
-
-        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (foren key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cidadeId) {
+        cadastroCidade.excluir(cidadeId);
 
     }
 
