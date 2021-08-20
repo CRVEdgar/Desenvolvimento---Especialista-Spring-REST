@@ -1,5 +1,6 @@
 package com.algafood.algafoodapiaplication.domain.service;
 
+import com.algafood.algafoodapiaplication.domain.exception.CidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.model.Cidade;
@@ -19,11 +20,11 @@ public class CadastroCidadeService {
     private static final String MSG_CIDADE_EM_USO
             = "Cidade de código %d não pode ser removida, pois está associada a outro item do banco";
 
-    private static final String MSG_CIDADE_NAO_ENCONTRADA
-            = "ID INVALIDO - ID [ %d ] DA CIDADE INDICADA NÃO ENCONTRADA";
-
-    private static final String MSG_ESTADO_NAO_ENCONTRADO
-            = "ID INVALIDO - ID [ %d ] DO ESTADO INDICADO NÃO ENCONTRADO";
+//    private static final String MSG_CIDADE_NAO_ENCONTRADA
+//            = "ID INVALIDO - ID [ %d ] DA CIDADE INDICADA NÃO ENCONTRADA";
+//
+//    private static final String MSG_ESTADO_NAO_ENCONTRADO
+//            = "ID INVALIDO - ID [ %d ] DO ESTADO INDICADO NÃO ENCONTRADO";
 
     @Autowired
     private CidadeRepository cidadeRepository;
@@ -52,7 +53,7 @@ public class CadastroCidadeService {
             cidadeRepository.deleteById(cidadeId);
 
         } catch(EmptyResultDataAccessException e){
-            throw new EntidadeNaoEncontradaException( String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
+            throw new CidadeNaoEncontradaException(cidadeId);
 
         } catch(DataIntegrityViolationException e){
             throw new EntidadeEmUsoException( String.format(MSG_CIDADE_EM_USO, cidadeId));
@@ -61,6 +62,6 @@ public class CadastroCidadeService {
 
     public Cidade buscarOuFalhar(Long cidadeId){
         return cidadeRepository.findById(cidadeId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+                .orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
     }
 }

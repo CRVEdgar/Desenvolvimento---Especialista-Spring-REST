@@ -2,6 +2,7 @@ package com.algafood.algafoodapiaplication.domain.service;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
+import com.algafood.algafoodapiaplication.domain.exception.RestauranteNaoEncontradoException;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.CozinhaRepository;
@@ -17,11 +18,11 @@ public class CadastroRestauranteService {
     private static final String MSG_RESTAURANTE_EM_USO
             = "Cozinha de código %d não pode ser removida, pois está associado a outro item do banco";
 
-    private static final String MSG_RESTAURANTE_NAO_ENCONTRADO
-            = "ID INVALIDO - ID [ %d ] DO RESTAURANTE INDICADO NÃO ENCONTRADO";
-
-    private static final String MSG_COZINHA_NAO_ENCONTRADA
-            = "ID INVALIDO - ID [ %d ] DA COZINHA INDICADA NÃO ENCONTRADA";
+//    private static final String MSG_RESTAURANTE_NAO_ENCONTRADO
+//            = "ID INVALIDO - ID [ %d ] DO RESTAURANTE INDICADO NÃO ENCONTRADO";
+//
+//    private static final String MSG_COZINHA_NAO_ENCONTRADA
+//            = "ID INVALIDO - ID [ %d ] DA COZINHA INDICADA NÃO ENCONTRADA";
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -51,7 +52,7 @@ public class CadastroRestauranteService {
             restauranteRepository.deleteById(restauranteId);
 
         } catch(EmptyResultDataAccessException e){
-            throw new EntidadeNaoEncontradaException( String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId));
+            throw new RestauranteNaoEncontradoException( restauranteId);
 
         } catch(DataIntegrityViolationException e){
             throw new EntidadeEmUsoException( String.format(MSG_RESTAURANTE_EM_USO, restauranteId));
@@ -60,6 +61,6 @@ public class CadastroRestauranteService {
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRepository.findById(restauranteId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException( restauranteId));
     }
 }

@@ -1,5 +1,6 @@
 package com.algafood.algafoodapiaplication.controller;
 
+import com.algafood.algafoodapiaplication.domain.exception.CozinhaNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.NegocioException;
@@ -55,8 +56,8 @@ public class RestauranteController {
 
         try {
             return cadastroRestaurante.salvar(restaurante);
-        }catch (EntidadeNaoEncontradaException e){
-            throw new NegocioException(e.getMessage());
+        }catch (CozinhaNaoEncontradaException e){
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
@@ -64,15 +65,15 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar( @PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 
+        try{
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
 
-            try{
-                return cadastroRestaurante.salvar(restauranteAtual);
-            }catch (EntidadeNaoEncontradaException e){
-                throw new NegocioException(e.getMessage());
-            }
+            return cadastroRestaurante.salvar(restauranteAtual);
+        }catch (CozinhaNaoEncontradaException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
 
     }
 
@@ -81,17 +82,6 @@ public class RestauranteController {
     public void remover(@PathVariable Long restauranteId) {
 
         cadastroRestaurante.excluir(restauranteId);
-        // obs: no controlador deve-se retornar o status do erro,e no serviço deve-se retornar as exceções capturadas
-//        try{
-//            cadastroRestaurante.excluir(restauranteId);
-//            return ResponseEntity.noContent().build();
-//
-//        } catch (EntidadeNaoEncontradaException e){ // caso o id informado não exista no banco
-//            return ResponseEntity.notFound().build();
-//
-//        } catch(EntidadeEmUsoException e){ //caso o cliente solicite excluir um objeto que tenha associação (forem key) associado a ele, o servidor captura a exceção e retorna o status 409 [conflict]
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-//        }
 
     }
 
