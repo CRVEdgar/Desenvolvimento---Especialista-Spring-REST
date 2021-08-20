@@ -2,6 +2,7 @@ package com.algafood.algafoodapiaplication.controller;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
+import com.algafood.algafoodapiaplication.domain.exception.NegocioException;
 import com.algafood.algafoodapiaplication.domain.model.Cidade;
 import com.algafood.algafoodapiaplication.domain.repository.CidadeRepository;
 import com.algafood.algafoodapiaplication.domain.service.CadastroCidadeService;
@@ -43,21 +44,25 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade adicionar (@RequestBody Cidade cidade){
-
-        return cadastroCidade.salvar(cidade);
+        try{
+            return cadastroCidade.salvar(cidade);
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
 
     }
 
-
-
+    
     @PutMapping("/{cidadeId}")
     public Cidade atualizar( @PathVariable Long cidadeId, @RequestBody Cidade cidade){
         Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
-        return cadastroCidade.salvar(cidadeAtual);
-
+        try{ // a captura dessa exception é para garantir que seja retornado o codigo 400 quando noa for encntrado o estado informado
+            return cadastroCidade.salvar(cidadeAtual);
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
 
     }
 
