@@ -2,6 +2,7 @@ package com.algafood.algafoodapiaplication.controller;
 
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
+import com.algafood.algafoodapiaplication.domain.exception.NegocioException;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
 import com.algafood.algafoodapiaplication.domain.repository.RestauranteRepository;
@@ -49,19 +50,17 @@ public class RestauranteController {
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar (@RequestBody Restaurante restaurante){
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurante adicionar (@RequestBody Restaurante restaurante){
 
-        try{
-            restaurante = cadastroRestaurante.salvar(restaurante);
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        try {
+            return cadastroRestaurante.salvar(restaurante);
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
         }
-//        return cadastroRestaurante.salvar(restaurante);
     }
 
-
-
+    
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar( @PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 
@@ -69,7 +68,11 @@ public class RestauranteController {
 
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
 
-            return cadastroRestaurante.salvar(restauranteAtual);
+            try{
+                return cadastroRestaurante.salvar(restauranteAtual);
+            }catch (EntidadeNaoEncontradaException e){
+                throw new NegocioException(e.getMessage());
+            }
 
     }
 

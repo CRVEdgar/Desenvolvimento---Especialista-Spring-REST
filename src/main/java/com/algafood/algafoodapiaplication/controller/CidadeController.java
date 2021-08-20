@@ -49,10 +49,10 @@ public class CidadeController {
         }catch (EntidadeNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
-
+        
     }
 
-    
+
     @PutMapping("/{cidadeId}")
     public Cidade atualizar( @PathVariable Long cidadeId, @RequestBody Cidade cidade){
         Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
