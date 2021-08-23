@@ -1,4 +1,4 @@
-package com.algafood.algafoodapiaplication.controller;
+package com.algafood.algafoodapiaplication.api.controller;
 
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;

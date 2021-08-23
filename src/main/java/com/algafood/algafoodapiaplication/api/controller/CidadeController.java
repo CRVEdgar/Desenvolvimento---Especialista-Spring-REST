@@ -1,5 +1,6 @@
-package com.algafood.algafoodapiaplication.controller;
+package com.algafood.algafoodapiaplication.api.controller;
 
+import com.algafood.algafoodapiaplication.api.exceptionhandler.Problema;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.EstadoNaoEncontradoException;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,5 +77,29 @@ public class CidadeController {
 
     }
 
+    //metodo para customizar a reposta em caso de exception
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<?> tratarEntidadeNaoEncontradaException(
+            EntidadeNaoEncontradaException e){
+
+        Problema problema = Problema.builder()
+                .dataHora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<?> tratarNegocioException(
+            NegocioException e){
+
+        Problema problema = Problema.builder()
+                .dataHora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
+    }
 
 }

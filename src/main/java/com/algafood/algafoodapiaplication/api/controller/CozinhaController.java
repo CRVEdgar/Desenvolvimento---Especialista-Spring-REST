@@ -1,4 +1,4 @@
-package com.algafood.algafoodapiaplication.controller;
+package com.algafood.algafoodapiaplication.api.controller;
 
 /*
  * IMPLEMENTAÇÃO DO CONTROLLER COM A INTERFACE JPAREPOSITORY
