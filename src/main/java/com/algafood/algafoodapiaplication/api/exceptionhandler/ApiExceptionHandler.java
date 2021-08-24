@@ -28,51 +28,34 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
         Problem problem = createProblemBuilder(status, problemType, detail).build();
 
-//        Problem problem = Problem.builder()
-//                .status(status.value())
-//                .type("http://algafood.com.br/entidade-nao-encontrada")
-//                .title("ENTIDADE NAO ENCONTRADA")
-//                .detail(ex.getMessage()).build();
-
-
-
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 
-//        Problema problema = Problema.builder()
-//                .dataHora(LocalDateTime.now())
-//                .mensagem(e.getMessage())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
     }
 
     @ExceptionHandler(EntidadeEmUsoException.class)
     public ResponseEntity<?> handleEntidadeEmUsoException(
             EntidadeEmUsoException ex, WebRequest request){
 
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+        HttpStatus status = HttpStatus.CONFLICT;
+        String detail = ex.getMessage();
+        ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
 
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 
-//        Problema problema = Problema.builder()
-//                .dataHora(LocalDateTime.now())
-//                .mensagem(e.getMessage())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
     }
 
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> handleNegocioException(
             NegocioException ex, WebRequest request){
 
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String detail = ex.getMessage();
+        ProblemType problemType = ProblemType.ERRO_NEGOCIO;
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
 
-//        Problema problema = Problema.builder()
-//                .dataHora(LocalDateTime.now())
-//                .mensagem(e.getMessage())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+
     }
 
     @Override
@@ -102,12 +85,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .detail(detail);
     }
 
-    //    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-//    public ResponseEntity<?> tratarHttpMEdiaTypeNotSupportedException(){
-//        Problema problema = Problema.builder()
-//                .dataHora(LocalDateTime.now())
-//                .mensagem("Tipo de midia não suportado! ").build();
-//
-//        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(problema);
-//    }
+
 }
