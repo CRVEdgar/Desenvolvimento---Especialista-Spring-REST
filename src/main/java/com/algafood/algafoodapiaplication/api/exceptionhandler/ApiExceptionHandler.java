@@ -3,7 +3,10 @@ package com.algafood.algafoodapiaplication.api.exceptionhandler;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /*
@@ -31,10 +35,28 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if(rootCause instanceof InvalidFormatException) {
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        }else if (rootCause instanceof PropertyBindingException) {
+            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
         }
 
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         String detail = "O corpo da requisição está invalido. Verifique se há erro de sintaxe";
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        // Criei o método joinPath para reaproveitar em todos os métodos que precisam
+        // concatenar os nomes das propriedades (separando por ".")
+        String path = joinPath(ex.getPath());
+
+        ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+        String detail = String.format("A propriedade '%s' não existe. "
+                + "Corrija ou remova essa propriedade e tente novamente.", path);
 
         Problem problem = createProblemBuilder(status, problemType, detail).build();
 
@@ -120,6 +142,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .type(problemType.getUri())
                 .title(problemType.getTitle())
                 .detail(detail);
+    }
+
+    private String joinPath(List<Reference> references) {
+        return references.stream()
+                .map(ref -> ref.getFieldName())
+                .collect(Collectors.joining("."));
     }
 
 
