@@ -28,9 +28,23 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+
+        String detail = String.format("Ocorreu um erro interno inesperado no sistema. Tente novamente e se" +
+                " o problema persistir, entre em contato com o ADM do sistema. ", ex.getMessage());
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
-                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
+               HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         String detail = String.format("O recurso %s, que você tentou acessar, é inexistente.",
