@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ProblemType {
 
-    ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada", "ENTIDADE NÃO ENCONTRADA"),
+    RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "RECURSO NÃO ENCONTRADO"),
     ENTIDADE_EM_USO("/entidade-em-uso", "ENTIDADE EM USO"),
     ERRO_NEGOCIO("/erro-negocio", "VIOLAÇÃO DA REGRA DE NEGOCIO"),
     MENSAGEM_INCOMPREENSIVEL("/mensagem-incopreensivel", "MENSAGEM INCONPREENSIVEL"),
