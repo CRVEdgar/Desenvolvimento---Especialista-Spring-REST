@@ -12,6 +12,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,18 +32,19 @@ public class Restaurante {
 
 //    @NotNull //vrf se é null
 //    @NotEmpty //vrf se está vazio ou nulo
-    @NotBlank(groups = Groups.CadastroRestaurante.class) // vrf se é nulo, vazio ou se tem espaço em branco
+    @NotBlank // vrf se é nulo, vazio ou se tem espaço em branco
     @Column(nullable=false) // [não] aceita valores nulos
     private String nome;
 
 //    @DecimalMin("0")
-    @PositiveOrZero(groups = Groups.CadastroRestaurante.class) //maior ou igual a zero
+    @PositiveOrZero //maior ou igual a zero
     @Column(name = "taxa_frete", nullable=false)
     private BigDecimal taxaFrete;
 
 //    @JsonIgnore
     @Valid //para verificação em cascata no objeto Cozinha
-    @NotNull(groups = Groups.CadastroRestaurante.class)
+    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+    @NotNull
     @JsonIgnoreProperties("hibernateLazyInitializer") //ignora a visualização mas realiza a busca quando necessário,
     @ManyToOne(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)
