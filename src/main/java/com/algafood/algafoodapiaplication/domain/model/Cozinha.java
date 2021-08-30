@@ -1,8 +1,10 @@
 package com.algafood.algafoodapiaplication.domain.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.algafood.algafoodapiaplication.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -23,13 +25,14 @@ import java.util.List;
 @Table(name ="tab_cozinhas")
 public class Cozinha {
 
-    @NotNull
+    @NotNull(groups = Groups.CadastroRestaurante.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long id;
 
     //@JsonIgnore //remove a representacao do atributo [nao deve ser usado em conjunto com @JsonProperty
+    @NotBlank
     @JsonProperty("titulo") //cria um nome que é somente represntativo para o atributo, sem alterar seu nome original(so o nome que aparece na tela)
     @Column//(name="nome_cozinha", length=30)
     private String nome;

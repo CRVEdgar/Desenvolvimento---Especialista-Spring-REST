@@ -1,6 +1,7 @@
 package com.algafood.algafoodapiaplication.domain.model;
 
 
+import com.algafood.algafoodapiaplication.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -29,18 +30,18 @@ public class Restaurante {
 
 //    @NotNull //vrf se é null
 //    @NotEmpty //vrf se está vazio ou nulo
-    @NotBlank // vrf se é nulo, vazio ou se tem espaço em branco
+    @NotBlank(groups = Groups.CadastroRestaurante.class) // vrf se é nulo, vazio ou se tem espaço em branco
     @Column(nullable=false) // [não] aceita valores nulos
     private String nome;
 
 //    @DecimalMin("0")
-    @PositiveOrZero //maior ou igual a zero
+    @PositiveOrZero(groups = Groups.CadastroRestaurante.class) //maior ou igual a zero
     @Column(name = "taxa_frete", nullable=false)
     private BigDecimal taxaFrete;
 
 //    @JsonIgnore
     @Valid //para verificação em cascata no objeto Cozinha
-    @NotNull
+    @NotNull(groups = Groups.CadastroRestaurante.class)
     @JsonIgnoreProperties("hibernateLazyInitializer") //ignora a visualização mas realiza a busca quando necessário,
     @ManyToOne(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)
