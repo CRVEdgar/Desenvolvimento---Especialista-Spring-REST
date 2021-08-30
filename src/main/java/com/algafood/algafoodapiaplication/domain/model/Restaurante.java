@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,6 +39,8 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
 //    @JsonIgnore
+    @Valid //para verificação em cascata no objeto Cozinha
+    @NotNull
     @JsonIgnoreProperties("hibernateLazyInitializer") //ignora a visualização mas realiza a busca quando necessário,
     @ManyToOne(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)

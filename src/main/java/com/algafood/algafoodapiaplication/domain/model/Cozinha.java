@@ -1,6 +1,7 @@
 package com.algafood.algafoodapiaplication.domain.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,6 +23,7 @@ import java.util.List;
 @Table(name ="tab_cozinhas")
 public class Cozinha {
 
+    @NotNull
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
