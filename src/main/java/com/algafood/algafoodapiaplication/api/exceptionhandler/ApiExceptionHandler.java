@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. " +
             "Tente novamente e se o problema persistir, entre em contato " +
             " com o ADM do sistema. ";
+
+    @Autowired
+    private MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
@@ -244,10 +250,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         BindingResult bindingResult = ex.getBindingResult();
 
         List<Problem.Field> fieldList = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> Problem.Field.builder()
-                        .nome(fieldError.getField())
-                        .userMessage(fieldError.getDefaultMessage())
-                        .build())
+                .map(fieldError -> {
+                    String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                    return Problem.Field.builder()
+                            .nome(fieldError.getField())
+                            .userMessage("O atributo [ " + fieldError.getField() + " ] " + message)
+                            .build();
+                })
                 .collect(Collectors.toList());
 
 
