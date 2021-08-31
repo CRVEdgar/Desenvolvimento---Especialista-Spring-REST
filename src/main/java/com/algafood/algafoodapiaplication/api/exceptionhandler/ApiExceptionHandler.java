@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*
-* PONTO CENTRAL PARA TRATAMENTO DE EXCEPTONHANDLER
+* PONTO CENTRAL PARA TRATAMENTO DE EXCEPTIONHANDLER
 * */
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -39,7 +39,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             " com o ADM do sistema. ";
 
     @Autowired
-    private MessageSource messageSource;
+    private MessageSource messageSource; //injetando o messages.properties [do resource]
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
