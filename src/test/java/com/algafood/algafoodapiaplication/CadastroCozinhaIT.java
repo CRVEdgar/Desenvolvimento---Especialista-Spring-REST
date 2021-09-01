@@ -1,14 +1,16 @@
 package com.algafood.algafoodapiaplication;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItems;
 
 import com.algafood.algafoodapiaplication.domain.exception.CozinhaNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.service.CadastroCozinhaService;
-//import io.restassured.RestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+//import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,4 +90,33 @@ public class CadastroCozinhaIT {
             .then()
                 .statusCode(200); // ou statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    public void deveConter4Cozinhas_QuandoConsultarCozinha(){
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo
+
+        given()
+            .basePath("/cozinhas")
+            .port(8080)
+            .accept(ContentType.JSON)
+        .when()
+            .get()
+        .then()
+            .body("", hasSize(4)); //valida se há 4 objetos [quantidade que há no banco]
+    }
+
+    @Test
+    public void deveConterCozinhasEspecificadas_QuandoConsultarCozinha(){
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo
+
+        given()
+            .basePath("/cozinhas")
+            .port(8080)
+            .accept(ContentType.JSON)
+        .when()
+            .get()
+        .then()
+            .body("titulo", hasItems("Brasileira", "Australiana", "Tailandesa")); //valida se há as cozinhas especificadas
+    }
+
 }
