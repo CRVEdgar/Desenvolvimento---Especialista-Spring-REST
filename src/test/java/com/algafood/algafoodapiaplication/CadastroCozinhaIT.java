@@ -1,6 +1,7 @@
 package com.algafood.algafoodapiaplication;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.port;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasItems;
 
@@ -12,6 +13,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 //import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,11 +23,18 @@ import javax.validation.ConstraintViolationException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CadastroCozinhaIT {
 
     @Autowired
     private CadastroCozinhaService cadastroCozinha;
+
+    @BeforeAll
+    public static void setUp(){
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo //habilita os logs quando o teste falhar
+        RestAssured.port = port; //especifica a porta padrao
+        RestAssured.basePath = "/cozinhas";
+    }
 
     // TESTES DE INTEGRAÇÃO
 
@@ -79,11 +88,8 @@ public class CadastroCozinhaIT {
 
     @Test
     public void deveRetornarStatus200_QuandoConsultarCozinha(){
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo
 
             given()
-                .basePath("/cozinhas")
-                .port(8080)
                 .accept(ContentType.JSON)
             .when()
                 .get()
@@ -93,11 +99,8 @@ public class CadastroCozinhaIT {
 
     @Test
     public void deveConter4Cozinhas_QuandoConsultarCozinha(){
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo
 
         given()
-            .basePath("/cozinhas")
-            .port(8080)
             .accept(ContentType.JSON)
         .when()
             .get()
@@ -107,11 +110,8 @@ public class CadastroCozinhaIT {
 
     @Test
     public void deveConterCozinhasEspecificadas_QuandoConsultarCozinha(){
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo
 
         given()
-            .basePath("/cozinhas")
-            .port(8080)
             .accept(ContentType.JSON)
         .when()
             .get()
