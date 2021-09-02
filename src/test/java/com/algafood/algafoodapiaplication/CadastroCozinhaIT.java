@@ -11,12 +11,10 @@ import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.service.CadastroCozinhaService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-//import org.hamcrest.Matchers;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -34,18 +32,16 @@ public class CadastroCozinhaIT {
     private CadastroCozinhaService cadastroCozinha;
 
     @Autowired
-    private static Flyway flyway;
+    private Flyway flyway;
 
-    @BeforeAll
-    //@Test
-    private static void setUp(){
+    @BeforeEach
+    private void setUp(){
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //auxilia no Debug mostrando o que foi realizado no metodo //habilita os logs quando o teste falhar
         RestAssured.port = port; //especifica a porta padrao
         RestAssured.basePath = "/cozinhas";
 
-        //flyway.migrate(); //utilizado para restartar o BD a cada teste que for realizado
+        flyway.migrate(); //utilizado para restartar o BD a cada teste que for realizado
     }
-
 
     //----------------------------------------------------
     // TESTES DE INTEGRAÇÃO
@@ -134,7 +130,7 @@ public class CadastroCozinhaIT {
     @Test
     public void testRetornarStatus201_QuandoCadastrarCozinha() {
         given()
-            .body("{ \"nome\": \"Chinesa\" }")
+            .body("{ \"titulo\": \"Chinesa\" }")
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
         .when()
