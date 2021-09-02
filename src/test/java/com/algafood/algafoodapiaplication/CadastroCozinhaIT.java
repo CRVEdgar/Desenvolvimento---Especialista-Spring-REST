@@ -2,8 +2,6 @@ package com.algafood.algafoodapiaplication;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.port;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasItems;
 
 import com.algafood.algafoodapiaplication.domain.exception.CozinhaNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
@@ -25,6 +23,7 @@ import org.springframework.test.context.TestPropertySource;
 import javax.validation.ConstraintViolationException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -118,14 +117,14 @@ public class CadastroCozinhaIT {
     }
 
     @Test
-    public void deveConter2Cozinhas_QuandoConsultarCozinha(){
+    public void testeConter2Cozinhas_QuandoConsultarCozinha(){
 
         given()
             .accept(ContentType.JSON)
         .when()
             .get()
         .then()
-            .body("", hasSize(3)); //valida se há 2 objetos [quantidade que há no banco]
+            .body("", hasSize(2)); //valida se há 2 objetos [quantidade que há no banco]
     }
 
     @Test
@@ -149,6 +148,29 @@ public class CadastroCozinhaIT {
             .post()
         .then()
             .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void deveRetornarRespostaEStatusCorretos_QuandoConsultarCozinhaExistente() {
+        given()
+            .pathParam("cozinhaId", 2)
+            .accept(ContentType.JSON)
+        .when()
+            .get("/{cozinhaId}")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("titulo", equalTo("Australiana"));
+    }
+
+    @Test
+    public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+        given()
+                .pathParam("cozinhaId", 100)
+                .accept(ContentType.JSON)
+                .when()
+                .get("/{cozinhaId}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private void prepararDados(){
