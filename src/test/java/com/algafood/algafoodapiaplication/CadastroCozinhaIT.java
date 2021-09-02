@@ -125,7 +125,7 @@ public class CadastroCozinhaIT {
         .when()
             .get()
         .then()
-            .body("", hasSize(8)); //valida se há 2 objetos [quantidade que há no banco]
+            .body("", hasSize(3)); //valida se há 2 objetos [quantidade que há no banco]
     }
 
     @Test
@@ -140,7 +140,7 @@ public class CadastroCozinhaIT {
     }
 
     @Test
-    public void testRetornarStatus201_QuandoCadastrarCozinha() {
+    public void deveRetornarStatus201_QuandoCadastrarCozinha() {
         given()
             .body("{ \"titulo\": \"Chinesa\" }")
             .contentType(ContentType.JSON)
