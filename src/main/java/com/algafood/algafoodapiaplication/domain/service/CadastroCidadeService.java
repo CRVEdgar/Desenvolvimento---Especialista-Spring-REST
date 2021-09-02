@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class CadastroCidadeService {
 //    @Autowired
 //    private EstadoRepository estadoRepository;
 
+    @Transactional
     public Cidade salvar(Cidade cidade){
         Long estadoId = cidade.getEstado().getId();
 
@@ -47,6 +49,7 @@ public class CadastroCidadeService {
 
     }
 
+    @Transactional
     public void excluir(Long cidadeId){
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
