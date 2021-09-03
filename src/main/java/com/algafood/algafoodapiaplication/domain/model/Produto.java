@@ -23,7 +23,6 @@ public class Produto {
     private BigDecimal preco;
     private Boolean ativo;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
