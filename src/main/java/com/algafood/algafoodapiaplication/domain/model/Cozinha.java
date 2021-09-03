@@ -31,7 +31,7 @@ public class Cozinha {
 
     //@JsonIgnore //remove a representacao do atributo [nao deve ser usado em conjunto com @JsonProperty
     @NotBlank
-    @JsonProperty("titulo") //cria um nome que é somente represntativo para o atributo, sem alterar seu nome original(so o nome que aparece na tela)
+//    @JsonProperty("titulo") //cria um nome que é somente represntativo para o atributo, sem alterar seu nome original(so o nome que aparece na tela)
     @Column//(name="nome_cozinha", length=30)
     private String nome;
 

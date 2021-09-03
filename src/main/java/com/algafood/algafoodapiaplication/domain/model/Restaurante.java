@@ -45,8 +45,8 @@ public class Restaurante {
     @Valid //para verificação em cascata no objeto Cozinha
     @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @NotNull
-    @JsonIgnoreProperties("hibernateLazyInitializer") //ignora a visualização mas realiza a busca quando necessário,
-    @ManyToOne(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
+    @JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora (desconsidera) o recebimento do parametro //allowGetters = nao vai ignorar quando for feito um get em nomes(titulo)
+    @ManyToOne//(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)
     private Cozinha cozinha;
 
