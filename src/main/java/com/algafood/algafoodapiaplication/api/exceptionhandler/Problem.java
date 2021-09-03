@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,7 +20,7 @@ public class Problem {
     private String detail;
 
     private String userMessage;
-    private LocalDateTime timeStamp;
+    private OffsetDateTime timeStamp;
     private List<Field>  fields;
 
     @Getter
