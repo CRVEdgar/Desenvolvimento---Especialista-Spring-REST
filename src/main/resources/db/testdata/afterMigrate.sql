@@ -47,12 +47,12 @@ insert into tab_cozinhas (nome) values ('Tailandesa');
 insert into tab_cozinhas (nome) values ('Indiana');
 
 
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values ('Thai Gourmet', 10, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Thai Delivery', 9.50, 1, CURRENT_TIMESTAMP(0), CURRENT_TIMESTAMP(0));
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Tuk Tuk Comida Indiana', 15, 2, CURRENT_TIMESTAMP(6), CURRENT_TIMESTAMP(6));
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Java Steakhouse', 12, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Lanchonete do Tio Sam', 11, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Bar da Maria', 6, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values ('Thai Gourmet', 10, 1, LOCALTIMESTAMP , LOCALTIMESTAMP , 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Thai Delivery', 9.50, 1, CURRENT_TIMESTAMP(0) , CURRENT_TIMESTAMP(0) );
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Tuk Tuk Comida Indiana', 15, 2, CURRENT_TIMESTAMP(6) , CURRENT_TIMESTAMP(6) );
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Java Steakhouse', 12, 3, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP );
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Lanchonete do Tio Sam', 11, 4, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP );
+insert into tab_restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Bar da Maria', 6, 4, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP );
 
 -- insert into tab_restaurante (nome, taxa_frete, cozinha_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values ('Cabana do Sol', 10, 1, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
 -- insert into tab_restaurante (nome, taxa_frete, cozinha_id) values ('Chilli', 9.5, 1);

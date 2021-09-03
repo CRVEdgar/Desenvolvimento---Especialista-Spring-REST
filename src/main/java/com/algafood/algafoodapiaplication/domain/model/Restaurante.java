@@ -14,6 +14,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +58,11 @@ public class Restaurante {
 
     @CreationTimestamp //deve ser atribuida com uma data/hora atual no momento que o objeto foi criado
     @Column(nullable = false)
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     @UpdateTimestamp // atribui uma data/hora atual no momento que o objeto é atualizado
     @Column(nullable = false)
-    private LocalDateTime dataAtualizacao;
+    private OffsetDateTime dataAtualizacao;
 
 
     @OneToMany(mappedBy = "restaurante")
