@@ -31,19 +31,19 @@ public class Restaurante {
 
 //    @NotNull //vrf se é null
 //    @NotEmpty //vrf se está vazio ou nulo
-    @NotBlank // vrf se é nulo, vazio ou se tem espaço em branco
+//    @NotBlank // vrf se é nulo, vazio ou se tem espaço em branco
     @Column(nullable=false) // [não] aceita valores nulos
     private String nome;
 
 //    @DecimalMin("0")
-    @PositiveOrZero //maior ou igual a zero
+//    @PositiveOrZero //maior ou igual a zero
     @Column(name = "taxa_frete", nullable=false)
     private BigDecimal taxaFrete;
 
 
-    @Valid //para verificação em cascata no objeto Cozinha
-    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-    @NotNull
+//    @Valid //para verificação em cascata no objeto Cozinha
+//    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+//    @NotNull
     @ManyToOne//(fetch = FetchType.LAZY) //LAZY -> associação preguiçosa , só carrega(select) quando precisar
     @JoinColumn(name = "cozinha_id", nullable=false)
     private Cozinha cozinha;

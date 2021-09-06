@@ -23,7 +23,7 @@ import java.util.List;
 @Table(name ="tab_cozinhas")
 public class Cozinha {
 
-    @NotNull(groups = Groups.CozinhaId.class) //o groups serve para especificar que o @NotNull c/c Validated(do controller) será validado somente para o grupo informado)
+//    @NotNull(groups = Groups.CozinhaId.class) //o groups serve para especificar que o @NotNull c/c Validated(do controller) será validado somente para o grupo informado)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)

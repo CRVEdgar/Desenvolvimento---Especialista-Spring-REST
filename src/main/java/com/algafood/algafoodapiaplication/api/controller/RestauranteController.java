@@ -1,11 +1,9 @@
 package com.algafood.algafoodapiaplication.api.controller;
 
-import com.algafood.algafoodapiaplication.Groups;
 import com.algafood.algafoodapiaplication.api.model.CozinhaDTO;
 import com.algafood.algafoodapiaplication.api.model.RestauranteDTO;
+import com.algafood.algafoodapiaplication.api.model.input.RestauranteInput;
 import com.algafood.algafoodapiaplication.domain.exception.CozinhaNaoEncontradaException;
-import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
-import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.exception.NegocioException;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
 import com.algafood.algafoodapiaplication.domain.model.Restaurante;
@@ -17,20 +15,16 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -58,15 +52,17 @@ public class RestauranteController {
 
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        return toDTO(restaurante);
+        return toDTO(restaurante); // devolve o objeto no formato DTO
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteDTO adicionar (@RequestBody @Valid Restaurante restaurante){
+    public RestauranteDTO adicionar (@RequestBody @Valid RestauranteInput restauranteInput){
 
         try {
-            return toDTO(cadastroRestaurante.salvar(restaurante));
+            Restaurante restaurante = toDomainObject(restauranteInput); // recebe o objeto no formato Input
+
+            return toDTO(cadastroRestaurante.salvar(restaurante)); // devolve o objeto no formato DTO
         }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage(), e);
         }
@@ -74,9 +70,11 @@ public class RestauranteController {
 
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDTO atualizar( @PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante){
+    public RestauranteDTO atualizar( @PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput){
 
         try{
+            Restaurante restaurante = toDomainObject(restauranteInput); // recebe o objeto no formato Input
+
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
@@ -96,14 +94,14 @@ public class RestauranteController {
 
     }
 
-    @PatchMapping("/{restauranteId}")
-    public RestauranteDTO atualizaParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request){
-        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
-
-        merge(campos, restauranteAtual, request);
-
-        return atualizar(restauranteId, restauranteAtual);
-    }
+//    @PatchMapping("/{restauranteId}")
+//    public RestauranteDTO atualizaParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request){
+//        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
+//        merge(campos, restauranteAtual, request);
+//
+//        // TO DO: CONVERTER restauranteAtual P/ restauranteInput
+//        return atualizar(restauranteId, restauranteAtual);
+//    }
 
     //explicação VD 4.34 /8.24
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request){
@@ -160,9 +158,24 @@ public class RestauranteController {
       //FAZENDO COM LAÇO FOREACH
 // List<RestauranteDTO> restauranteDTO = new ArrayList<>();
 //        for(RestauranteDTO res: restauranteDTO){
-//            res.setId(restaurantes.getId()).add();
+//            res.setId(restaurantes.getId());
 //            restauranteDTO.setId(res.getId());
 //        }
+    }
+
+
+    // metodo que recebe um Restaurante enviado na requisição e converte para um tipo Restaurante do dominio
+    private Restaurante toDomainObject(RestauranteInput restauranteInput){
+
+        Cozinha cozinha = new Cozinha();
+        cozinha.setId(restauranteInput.getCozinha().getId());
+
+        Restaurante restaurante = new Restaurante();
+        restaurante.setNome(restauranteInput.getNome());
+        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
+        restaurante.setCozinha(cozinha);
+
+        return restaurante;
     }
 
 
