@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ CLASSE UTILIZADA PARA CONVERTER Restaurante em RestauranteDTO
+* */
+
 @Component
 public class RestauranteConvertAssembler {
 

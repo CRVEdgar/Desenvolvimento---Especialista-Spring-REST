@@ -1,6 +1,7 @@
 package com.algafood.algafoodapiaplication.api.controller;
 
 import com.algafood.algafoodapiaplication.api.assemblerConvert.RestauranteConvertAssembler;
+import com.algafood.algafoodapiaplication.api.assemblerConvert.RestauranteConvertDISAssembler;
 import com.algafood.algafoodapiaplication.api.model.CozinhaDTO;
 import com.algafood.algafoodapiaplication.api.model.RestauranteDTO;
 import com.algafood.algafoodapiaplication.api.model.input.RestauranteInput;
@@ -42,6 +43,9 @@ public class RestauranteController {
     @Autowired
     private RestauranteConvertAssembler restauranteConvertAssembler;
 
+    @Autowired
+    private RestauranteConvertDISAssembler disAssembler;
+
 
     @GetMapping
     public List<RestauranteDTO> listar(){
@@ -64,7 +68,7 @@ public class RestauranteController {
     public RestauranteDTO adicionar (@RequestBody @Valid RestauranteInput restauranteInput){
 
         try {
-            Restaurante restaurante = toDomainObject(restauranteInput); // recebe o objeto no formato Input
+            Restaurante restaurante = disAssembler.toDomainObject(restauranteInput); // recebe o objeto no formato Input
 
             return restauranteConvertAssembler.toDTO(cadastroRestaurante.salvar(restaurante)); // devolve o objeto no formato DTO
         }catch (CozinhaNaoEncontradaException e){
@@ -77,7 +81,7 @@ public class RestauranteController {
     public RestauranteDTO atualizar( @PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput){
 
         try{
-            Restaurante restaurante = toDomainObject(restauranteInput); // recebe o objeto no formato Input
+            Restaurante restaurante = disAssembler.toDomainObject(restauranteInput); // recebe o objeto no formato Input
 
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
@@ -137,23 +141,6 @@ public class RestauranteController {
         }
     }
 
-
-
-
-
-    // metodo que recebe um Restaurante enviado na requisição e converte para um tipo Restaurante do dominio
-    private Restaurante toDomainObject(RestauranteInput restauranteInput){
-
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
-
-        Restaurante restaurante = new Restaurante();
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
-    }
 
 
 }
