@@ -1,5 +1,6 @@
 package com.algafood.algafoodapiaplication.api.controller;
 
+import com.algafood.algafoodapiaplication.api.assemblerConvert.RestauranteConvertAssembler;
 import com.algafood.algafoodapiaplication.api.model.CozinhaDTO;
 import com.algafood.algafoodapiaplication.api.model.RestauranteDTO;
 import com.algafood.algafoodapiaplication.api.model.input.RestauranteInput;
@@ -38,11 +39,14 @@ public class RestauranteController {
     @Autowired
     private CadastroRestauranteService cadastroRestaurante;
 
+    @Autowired
+    private RestauranteConvertAssembler restauranteConvertAssembler;
+
 
     @GetMapping
     public List<RestauranteDTO> listar(){
 
-        return toCollectionDTO(restauranteRepository.findAll());
+        return restauranteConvertAssembler.toCollectionDTO(restauranteRepository.findAll());
 
     }
 
@@ -52,7 +56,7 @@ public class RestauranteController {
 
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        return toDTO(restaurante); // devolve o objeto no formato DTO
+        return restauranteConvertAssembler.toDTO(restaurante); // devolve o objeto no formato DTO
     }
 
     @PostMapping
@@ -62,7 +66,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = toDomainObject(restauranteInput); // recebe o objeto no formato Input
 
-            return toDTO(cadastroRestaurante.salvar(restaurante)); // devolve o objeto no formato DTO
+            return restauranteConvertAssembler.toDTO(cadastroRestaurante.salvar(restaurante)); // devolve o objeto no formato DTO
         }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage(), e);
         }
@@ -79,7 +83,7 @@ public class RestauranteController {
 
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
 
-            return toDTO(cadastroRestaurante.salvar(restauranteAtual));
+            return restauranteConvertAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
         }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage(), e);
         }
@@ -134,34 +138,7 @@ public class RestauranteController {
     }
 
 
-    private RestauranteDTO toDTO(Restaurante restaurante) {
-        CozinhaDTO cozinhaDTO = new CozinhaDTO(); //CONVERSÃO DA ENTIDADE Cozinha para CozinhaDTO
-        cozinhaDTO.setId(restaurante.getCozinha().getId());
-        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
 
-        RestauranteDTO restauranteDTO = new RestauranteDTO(); //CONVERSÃO DA ENTIDADE Restaurante para RestauranteDTO
-        restauranteDTO.setId(restaurante.getId());
-        restauranteDTO.setNome(restaurante.getNome());
-        restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
-        restauranteDTO.setCozinha(cozinhaDTO);
-        return restauranteDTO;
-    }
-
-    private List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes){
-
-        return restaurantes.stream()
-                .map(restaurante -> toDTO(restaurante))
-                .collect(Collectors.toList());
-
-
-
-      //FAZENDO COM LAÇO FOREACH
-// List<RestauranteDTO> restauranteDTO = new ArrayList<>();
-//        for(RestauranteDTO res: restauranteDTO){
-//            res.setId(restaurantes.getId());
-//            restauranteDTO.setId(res.getId());
-//        }
-    }
 
 
     // metodo que recebe um Restaurante enviado na requisição e converte para um tipo Restaurante do dominio

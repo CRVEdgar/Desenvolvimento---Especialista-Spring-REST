@@ -9,6 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
+/*
+ CLASSE UTILIZADA PARA RECEBER O CONTEUDO DA REQUISIÇÃO
+* */
+
 @Setter
 @Getter
 public class RestauranteInput {

@@ -15,27 +15,29 @@ import java.util.List;
 /*
 Classe de customização da representação dos recursos
 CONFIGURADA POR: JacksonMixinModule
+
+STATUS: INUTILIZADA PORQUE A CONFIGURAÇÃO DE VISUALIZAÇÃO ESTÁ SENDO FEITA PELA CLASSE RestauranteDTO
  */
 
-public class RestauranteMixin {
-
-
-    @JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora (desconsidera) o recebimento do parametro //allowGetters = nao vai ignorar quando for feito um get em nomes(titulo)
-    private Cozinha cozinha;
-
-    @JsonIgnore
-    private List<FormaPagamento> formaPagamento = new ArrayList<>();
-
-    @JsonIgnore
-    private Endereco endereco;
-
-    //@JsonIgnore
-    private OffsetDateTime dataCadastro;
-
-    //@JsonIgnore
-    private OffsetDateTime dataAtualizacao;
-
-    @JsonIgnore
-    private List<Produto> produtos = new ArrayList<>();
-
-}
+//public class RestauranteMixin {
+//
+//
+//    @JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora (desconsidera) o recebimento do parametro //allowGetters = nao vai ignorar quando for feito um get em nomes(titulo)
+//    private Cozinha cozinha;
+//
+//    @JsonIgnore
+//    private List<FormaPagamento> formaPagamento = new ArrayList<>();
+//
+//    @JsonIgnore
+//    private Endereco endereco;
+//
+//    //@JsonIgnore
+//    private OffsetDateTime dataCadastro;
+//
+//    //@JsonIgnore
+//    private OffsetDateTime dataAtualizacao;
+//
+//    @JsonIgnore
+//    private List<Produto> produtos = new ArrayList<>();
+//
+//}

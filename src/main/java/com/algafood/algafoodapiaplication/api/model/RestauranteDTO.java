@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/*
+ CLASSE UTILIZADA PARA FORNECER O CONTEUDO DA REQUISIÇÃO
+* */
+
 @Setter
 @Getter
 public class RestauranteDTO {
