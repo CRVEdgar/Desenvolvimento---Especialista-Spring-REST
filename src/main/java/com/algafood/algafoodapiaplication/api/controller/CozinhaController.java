@@ -4,6 +4,10 @@ package com.algafood.algafoodapiaplication.api.controller;
  * IMPLEMENTAÇÃO DO CONTROLLER COM A INTERFACE JPAREPOSITORY
  * */
 
+import com.algafood.algafoodapiaplication.api.assemblerConvert.CozinhaConvertAssembler;
+import com.algafood.algafoodapiaplication.api.assemblerConvert.CozinhaConvertDISAssembler;
+import com.algafood.algafoodapiaplication.api.model.CozinhaDTO;
+import com.algafood.algafoodapiaplication.api.model.input.CozinhaInput;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.model.Cozinha;
@@ -32,18 +36,28 @@ public class CozinhaController {
     @Autowired
     private CadastroCozinhaService cadastroCozinha;
 
+    @Autowired
+    private CozinhaConvertAssembler cozinhaConvertAssembler;
+
+    @Autowired
+    private CozinhaConvertDISAssembler cozinhaConvertDISAssembler;
+
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}) //Especifica qual o tipo de resposta suportada
-    public List<Cozinha> listar(){
-
-        return cozinhaRepository.findAll();
+    public List<CozinhaDTO> listar(){
+        return cozinhaConvertAssembler.toCollectionDTO(cozinhaRepository.findAll());
+//        return cozinhaRepository.findAll();
 
     }
 
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha buscar(@PathVariable Long cozinhaId){
-        return cadastroCozinha.buscarOuFalhar(cozinhaId);
+    public CozinhaDTO buscar(@PathVariable Long cozinhaId){
+        Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+
+        return cozinhaConvertAssembler.toDTO(cozinha);
+
+//        return cadastroCozinha.buscarOuFalhar(cozinhaId);
 //        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
 //
 //        if(cozinha.isPresent() ){
@@ -57,19 +71,26 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar (@RequestBody @Valid Cozinha cozinha){
+    public CozinhaDTO adicionar (@RequestBody @Valid CozinhaInput cozinhaInput){
+        Cozinha cozinha = cozinhaConvertDISAssembler.toDomainObject(cozinhaInput);
 
-        return cadastroCozinha.salvar(cozinha);
+        return cozinhaConvertAssembler.toDTO(cadastroCozinha.salvar(cozinha));
+
+//        return cadastroCozinha.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha atualizar( @PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha){
+    public CozinhaDTO atualizar( @PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInput cozinhaInput){
 
         Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
-        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
+        cozinhaConvertDISAssembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
 
-        return cadastroCozinha.salvar(cozinhaAtual);
+        return cozinhaConvertAssembler.toDTO(cadastroCozinha.salvar(cozinhaAtual));
+
+//        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id] INDICA O QUE DEVE SER IGNORADO NA CÓPIA
+//
+//        return cadastroCozinha.salvar(cozinhaAtual);
 
     }
 
