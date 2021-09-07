@@ -1,5 +1,9 @@
 package com.algafood.algafoodapiaplication.api.controller;
 
+import com.algafood.algafoodapiaplication.api.assemblerConvert.EstadoConvertAssembler;
+import com.algafood.algafoodapiaplication.api.assemblerConvert.EstadoConvertDISAssembler;
+import com.algafood.algafoodapiaplication.api.model.EstadoDTO;
+import com.algafood.algafoodapiaplication.api.model.input.EstadoInput;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeEmUsoException;
 import com.algafood.algafoodapiaplication.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.algafoodapiaplication.domain.model.Estado;
@@ -26,33 +30,48 @@ public class EstadoController {
     @Autowired
     private CadastroEstadoService cadastroEstado;
 
+    @Autowired
+    private EstadoConvertAssembler estadoConvertAssembler;
+
+    @Autowired
+    private EstadoConvertDISAssembler estadoConvertDISAssembler;
+
     @GetMapping
-    public List<Estado> listar(){
-        return estadoRepository.findAll();
+    public List<EstadoDTO> listar(){
+        return estadoConvertAssembler.toCollectionDTO(estadoRepository.findAll());
+//        return estadoRepository.findAll();
     }
 
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId){
-        return cadastroEstado.buscarOuFalhar(estadoId);
+    public EstadoDTO buscar(@PathVariable Long estadoId){
+        Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
+
+        return estadoConvertAssembler.toDTO(estado);
+//        return cadastroEstado.buscarOuFalhar(estadoId);
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar (@RequestBody @Valid Estado estado){
-
-        return cadastroEstado.salvar(estado);
+    public EstadoDTO adicionar (@RequestBody @Valid EstadoInput estadoInput){
+        Estado estado = estadoConvertDISAssembler.toDomainObject(estadoInput);
+        return estadoConvertAssembler.toDTO(cadastroEstado.salvar(estado));
+//        return cadastroEstado.salvar(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar( @PathVariable Long estadoId, @RequestBody @Valid Estado estado){
+    public EstadoDTO atualizar( @PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput){
 
         Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
+        estadoConvertDISAssembler.copyToDomainObject(estadoInput, estadoAtual);
 
-        return cadastroEstado.salvar(estadoAtual);
+        return estadoConvertAssembler.toDTO(cadastroEstado.salvar(estadoAtual));
+
+//        BeanUtils.copyProperties(estado, estadoAtual, "id");
+//
+//        return cadastroEstado.salvar(estadoAtual);
 
     }
 
