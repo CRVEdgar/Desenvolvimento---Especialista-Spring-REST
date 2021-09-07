@@ -36,4 +36,10 @@ public class RestauranteConvertDISAssembler {
 //        return restaurante;
     }
 
+    public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante){
+        restaurante.setCozinha(new Cozinha()); //instacia uma nova cozinha para evitar que o id informado dê erro//evita que o JPA lance uma exception
+                        // (origem , destino);
+        modelMapper.map(restauranteInput, restaurante);
+    }
+
 }

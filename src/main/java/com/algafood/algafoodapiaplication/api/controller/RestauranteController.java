@@ -81,11 +81,15 @@ public class RestauranteController {
     public RestauranteDTO atualizar( @PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput){
 
         try{
-            Restaurante restaurante = disAssembler.toDomainObject(restauranteInput); // recebe o objeto no formato Input
+// ***           Restaurante restaurante = disAssembler.toDomainObject(restauranteInput); // recebe o objeto no formato Input
 
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
+            disAssembler.copyToDomainObject(restauranteInput, restauranteAtual); //copia o que foi passado na requisiçao para o restaurante localizado
+
+// ***            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento", "endereco", "dataCadastro", "produtos"); // fazendo uma cópia utilizando a classe BeanUtils | O TERCEIRO PARAMETRO [id]/[formaPagamento] INDICA O QUE DEVE SER IGNORADO NA CÓPIA, se nao fizer isso, e o parametro for passado sem nada, o hibernate irá apagar e inserir null no campo informado
+
+//  *** -> foi retirado depois da criação do metodo disAssembler.copyToDomainObject [vd 11.17]
 
             return restauranteConvertAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
         }catch (CozinhaNaoEncontradaException e){
