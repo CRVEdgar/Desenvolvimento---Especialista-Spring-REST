@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 Classe de customização da representação dos recursos
 CONFIGURADA POR: JacksonMixinModule
  */
-public class CidadeMixin {
-
-    @JsonIgnoreProperties(value = "nome", allowGetters = true)
-    private Estado estado;
-}
+//public class CidadeMixin {
+//
+//    @JsonIgnoreProperties(value = "nome", allowGetters = true)
+//    private Estado estado;
+//}

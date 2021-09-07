@@ -1,6 +1,6 @@
 package com.algafood.algafoodapiaplication.core.jackson;
 
-import com.algafood.algafoodapiaplication.api.model.mixin.CidadeMixin;
+//import com.algafood.algafoodapiaplication.api.model.mixin.CidadeMixin;
 import com.algafood.algafoodapiaplication.api.model.mixin.CozinhaMixin;
 import com.algafood.algafoodapiaplication.api.model.mixin.ProdutoMixin;
 //import com.algafood.algafoodapiaplication.api.model.mixin.RestauranteMixin;
@@ -18,7 +18,7 @@ public class JacksonMixinModule extends SimpleModule {
 
     public JacksonMixinModule() {
 //        setMixInAnnotation(Restaurante.class, RestauranteMixin.class);
-        setMixInAnnotation(Cidade.class, CidadeMixin.class);
+//        setMixInAnnotation(Cidade.class, CidadeMixin.class);
         setMixInAnnotation(Cozinha.class, CozinhaMixin.class);
         //setMixInAnnotation(Produto.class, ProdutoMixin.class);
 
