@@ -54,6 +54,7 @@ public class CadastroCidadeService {
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
             cidadeRepository.deleteById(cidadeId);
+            cidadeRepository.flush();
 
         } catch(EmptyResultDataAccessException e){
             throw new CidadeNaoEncontradaException(cidadeId);

@@ -34,6 +34,7 @@ public class CadastroEstadoService {
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
             estadoRepository.deleteById(estadoId);
+            estadoRepository.flush();
 
         } catch(EmptyResultDataAccessException e){
             throw new EstadoNaoEncontradoException( estadoId);

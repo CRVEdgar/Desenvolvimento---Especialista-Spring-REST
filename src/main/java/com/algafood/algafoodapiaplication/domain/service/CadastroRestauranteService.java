@@ -53,6 +53,7 @@ public class CadastroRestauranteService {
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
             restauranteRepository.deleteById(restauranteId);
+            restauranteRepository.flush();
 
         } catch(EmptyResultDataAccessException e){
             throw new RestauranteNaoEncontradoException( restauranteId);

@@ -36,6 +36,7 @@ public class CadastroCozinhaService {
         //obs: no serviço deve-se caputra e lançar as exceções capturadas, e no controller deve-se lançar o status do erro assoiado à exceção
         try {
             cozinhaRepository.deleteById(cozinhaId);
+            cozinhaRepository.flush(); //descarrega todas as mudanças penddentes no banco de dados -> pra poder capturar a exceção lançada neste metodo [excluir]
 
         } catch(EmptyResultDataAccessException e){
             throw new CozinhaNaoEncontradaException(cozinhaId);
